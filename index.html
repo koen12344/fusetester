@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	 <link rel="manifest" href="/manifest.json">
+    <script src="https://kit.fontawesome.com/06b15c34b4.js" crossorigin="anonymous"></script>
     <title>Fuse Tester</title>
     <style>
         body {
@@ -17,24 +18,122 @@
             background-color:#ddd6c8;
         }
         #status {
-			background-color:#FFEB3B;
+			background-color:#FFB300;
 			width:50vw;
 			height:50vw;
             margin:0 auto;
             border-radius: 100%;
             box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+            background-image: url("images/fuse.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size:40vw;
+        }
+
+        .checkbox-container {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            font-size: 22px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            width:75vw;
+            margin: 0 auto;
+        }
+
+        /* Hide the browser's default checkbox */
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Create a custom checkbox */
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+        }
+
+        /* On mouse-over, add a grey background color */
+        .checkbox-container:hover input ~ .checkmark {
+            background-color: #ccc;
+        }
+
+        /* When the checkbox is checked, add a blue background */
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: #2196F3;
+        }
+
+        /* Create the checkmark/indicator (hidden when not checked) */
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the checkmark when checked */
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Style the checkmark/indicator */
+        .checkbox-container .checkmark:after {
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .footer {
+            position: absolute;
+            bottom:0;
+            width:100%;
+            height:75px;
+            background-color:#F57C00;
+            margin:0;
+            left:0;
+            line-height: 75px;
+            font-size:12px;
+            justify-content: center;
+            color:#ddd6c8;
+        }
+        .footer a{
+            color:#ddd6c8;
         }
     </style>
 </head>
 <body>
     <h1>Fuse Tester</h1>
     <div id="status"></div>
-	<p>Touch one terminal of the fuse to the yellow circle, while touching the other terminal with your finger. If circle turns green, fuse is good</p>
+    <br />
+	<p>Touch one terminal of the fuse to the circle, while holding the other terminal between your fingers. If circle turns green, fuse is good</p>
     <audio id="fuse-sound" src="/sounds/fuse-working-sound.mp3" preload="auto"></audio>
-    <button onclick="enableWakeLock()">Keep Screen On</button>
-    <button onclick="disableWakeLock()">Allow Screen Off</button>
+    <br />
+    <label class="checkbox-container">Keep phone screen on
+        <input type="checkbox" id="keep-screen-on-checkbox">
+        <span class="checkmark"></span>
+    </label>
+
 <br /><br />
     <button id="install-button" style="display: none;">Install App</button>
+
+    <div class="footer">
+        Created by Koen Reus &bull; <a href="https://github.com/koen12344"><i class="fa-brands fa-github"></i> koen12344</a> &bull; <a href="https://x.com/KoenReus"><i class="fa-brands fa-x-twitter"></i> koenreus</a>
+    </div>
 
     <script>
         const statusElement = document.getElementById('status');
@@ -105,6 +204,16 @@
             }
         }
 
+        // Handle the checkbox change event
+        const checkbox = document.getElementById('keep-screen-on-checkbox');
+        checkbox.addEventListener('change', async () => {
+            if (checkbox.checked) {
+                await enableWakeLock();  // Enable wake lock when checkbox is checked
+            } else {
+                await disableWakeLock();  // Disable wake lock when checkbox is unchecked
+            }
+        });
+
         // Detect fuse touch event
         statusElement.addEventListener('touchstart', () => {
             statusElement.style.backgroundColor = "#689F38";
@@ -113,11 +222,8 @@
         });
 
         statusElement.addEventListener('touchend', () => {
-            statusElement.style.backgroundColor = '#FFEB3B';
+            statusElement.style.backgroundColor = '#FFB300';
         });
-
-        // Enable wake lock when the page loads
-        window.addEventListener('load', enableWakeLock);
     </script>
 </body>
 </html>
