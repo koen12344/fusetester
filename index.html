@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	 <link rel="manifest" href="/manifest.json">
     <title>Fuse Tester</title>
     <style>
         body {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Standard syntax */
+
             text-align: center;
             font-family: Arial, sans-serif;
             background-color:#ddd6c8;
@@ -24,10 +29,12 @@
 <body>
     <h1>Fuse Tester</h1>
     <div id="status"></div>
-	<p>Touch one terminal of the fuse to the yellow circle, while touching the other terminal with your finger</p>
+	<p>Touch one terminal of the fuse to the yellow circle, while touching the other terminal with your finger. If circle turns green, fuse is good</p>
     <audio id="fuse-sound" src="/sounds/fuse-working-sound.mp3" preload="auto"></audio>
     <button onclick="enableWakeLock()">Keep Screen On</button>
     <button onclick="disableWakeLock()">Allow Screen Off</button>
+<br /><br />
+    <button id="install-button" style="display: none;">Install App</button>
 
     <script>
         const statusElement = document.getElementById('status');
@@ -39,6 +46,33 @@
                 .then(() => console.log('Service Worker Registered'))
                 .catch(error => console.log('Service Worker Registration Failed:', error));
         }
+
+
+        const installButton = document.getElementById('install-button');
+
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Save the event to trigger it later
+            deferredPrompt = e;
+            // Optionally, show your install button to prompt users
+            document.getElementById('install-button').style.display = 'block';
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();  // Show the install prompt
+                const choiceResult = await deferredPrompt.userChoice;
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                deferredPrompt = null;  // Reset the deferredPrompt variable
+            }
+        });
 
         // Function to vibrate the device
         function triggerVibration() {
