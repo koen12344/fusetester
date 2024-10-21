@@ -3,8 +3,9 @@
     "short_name": "FuseTest",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#007aff",
+    "orientation": "portrait",
+    "background_color": "#ddd6c8",
+    "theme_color": "#FFB300",
     "description": "An app to test fuses by touching them to the screen.",
     "icons": [
         {
