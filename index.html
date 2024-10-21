@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	 <link rel="manifest" href="/manifest.json">
-    <title>Fuse Tester PWA</title>
+    <title>Fuse Tester</title>
     <style>
         body {
             text-align: center;
             font-family: Arial, sans-serif;
+            background-color:#ddd6c8;
         }
         #status {
-			background-color:yellow;
-			width:50px;
-			height:50px;
+			background-color:#FFEB3B;
+			width:50vw;
+			height:50vw;
+            margin:0 auto;
+            border-radius: 100%;
+            box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
     <h1>Fuse Tester</h1>
     <div id="status"></div>
-	<p>Place the fuse on the screen</p>
+	<p>Touch one terminal of the fuse to the yellow circle, while touching the other terminal with your finger</p>
     <audio id="fuse-sound" src="/sounds/fuse-working-sound.mp3" preload="auto"></audio>
     <button onclick="enableWakeLock()">Keep Screen On</button>
     <button onclick="disableWakeLock()">Allow Screen Off</button>
@@ -29,6 +33,12 @@
         const statusElement = document.getElementById('status');
         const fuseSound = document.getElementById('fuse-sound');
         let wakeLock = null;
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(error => console.log('Service Worker Registration Failed:', error));
+        }
 
         // Function to vibrate the device
         function triggerVibration() {
@@ -63,13 +73,13 @@
 
         // Detect fuse touch event
         statusElement.addEventListener('touchstart', () => {
-            statusElement.style.backgroundColor = "green";
+            statusElement.style.backgroundColor = "#689F38";
             triggerVibration();  // Shake the phone
             playFuseSound();  // Play sound
         });
 
         statusElement.addEventListener('touchend', () => {
-            statusElement.style.backgroundColor = 'yellow';
+            statusElement.style.backgroundColor = '#FFEB3B';
         });
 
         // Enable wake lock when the page loads
