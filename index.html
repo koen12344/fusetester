@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <link rel="manifest" href="/manifest.json">
+    <title>Fuse Tester PWA</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        #status {
+			background-color:yellow;
+			width:50px;
+			height:50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fuse Tester</h1>
+    <div id="status"></div>
+	<p>Place the fuse on the screen</p>
+    <audio id="fuse-sound" src="/sounds/fuse-working-sound.mp3" preload="auto"></audio>
+    <button onclick="enableWakeLock()">Keep Screen On</button>
+    <button onclick="disableWakeLock()">Allow Screen Off</button>
+
+    <script>
+        const statusElement = document.getElementById('status');
+        const fuseSound = document.getElementById('fuse-sound');
+        let wakeLock = null;
+
+        // Function to vibrate the device
+        function triggerVibration() {
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);  // Vibrate pattern
+            }
+        }
+
+        // Function to play sound
+        function playFuseSound() {
+            fuseSound.play();
+        }
+
+        // Function to enable wake lock
+        async function enableWakeLock() {
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                console.log('Wake lock enabled');
+            } catch (err) {
+                console.log('Wake lock failed: ', err);
+            }
+        }
+
+        // Function to disable wake lock
+        async function disableWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release();
+                wakeLock = null;
+                console.log('Wake lock disabled');
+            }
+        }
+
+        // Detect fuse touch event
+        statusElement.addEventListener('touchstart', () => {
+            statusElement.style.backgroundColor = "green";
+            triggerVibration();  // Shake the phone
+            playFuseSound();  // Play sound
+        });
+
+        statusElement.addEventListener('touchend', () => {
+            statusElement.style.backgroundColor = 'yellow';
+        });
+
+        // Enable wake lock when the page loads
+        window.addEventListener('load', enableWakeLock);
+    </script>
+</body>
+</html>
