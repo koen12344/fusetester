@@ -27,7 +27,9 @@
             background-image: url("images/fuse.png");
             background-repeat: no-repeat;
             background-position: center;
-            background-size:40vw;
+            background-size:100%;
+            max-width: 300px;
+            max-height:300px;
         }
 
         .checkbox-container {
@@ -42,6 +44,7 @@
             user-select: none;
             width:75vw;
             margin: 0 auto;
+            max-width:400px;
         }
 
         /* Hide the browser's default checkbox */
@@ -114,6 +117,19 @@
         .footer a{
             color:#ddd6c8;
         }
+
+        #install-button {
+            width:80vw;
+            margin:0 auto;
+            line-height:2em;
+            background-color: white;
+            border-radius:3px;
+            border-width:1px;
+            max-width:400px;
+        }
+        #install-button:hover{
+            background-color:#cccccc;
+        }
     </style>
 </head>
 <body>
@@ -129,7 +145,7 @@
     </label>
 
 <br /><br />
-    <button id="install-button" style="display: none;">Install App</button>
+    <button id="install-button" style="display: none;"><i class="fa-solid fa-download"></i> Install Fuse Tester App</button>
 
     <div class="footer">
         Created by Koen Reus &bull; <a href="https://github.com/koen12344"><i class="fa-brands fa-github"></i> koen12344</a> &bull; <a href="https://x.com/KoenReus"><i class="fa-brands fa-x-twitter"></i> koenreus</a>
