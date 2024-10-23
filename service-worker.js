@@ -7,7 +7,9 @@ self.addEventListener('install', event => {
                 '/icons/icon-192x192.png',
                 '/icons/icon-512x512.png',
                 '/manifest.json',
-                '/images/fuse.png'
+                '/images/fuse.png',
+                '/sounds/fuse-working-sound.mp3',
+                '/icons/icon-512x512-maskable.png'
             ]);
         })
     );
